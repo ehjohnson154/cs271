@@ -27,6 +27,11 @@ int length(char* txt) {
 	int len = 0;
 	
 	/* REPLACE WITH YOUR CODE */
+	while(txt[len] != '\0')
+	{
+		len++;
+	}
+	
 
 	return len;  
 }
@@ -50,6 +55,9 @@ char *welcome(char* hello, char* name) {
 	char *message = malloc(sizeof(char)*MAX_LIMIT);
 		
 	/* REPLACE WITH YOUR CODE */
+	strcpy(message, "Hello ");
+	strcat(message, name);
+	strcat(message, "!");
 	
 	return message;	
 }
@@ -66,9 +74,30 @@ char *welcome(char* hello, char* name) {
  * returns: nothing. result contains the reversed string.
  */
 void reverse(char* txt, char* result) {
-
-	/* REPLACE WITH YOUR CODE */
 	
+	/* REPLACE WITH YOUR CODE */
+	//char* stuff = txt;
+	//char* blah = result;
+	//printf("%s\n", stuff);
+	//printf("%s\n", blah);	
+	
+	
+	
+	
+	int end = length(txt)-1;
+	//char temp;
+	int start = 0;
+	while(end > -1)
+	{
+		
+		result[start] = txt[end];
+		end--;
+		start++;
+	}
+	result[length(txt)] = '\0';
+	//strcat(result, \0');
+	
+	//for (i = 0; i < end; ++i)
 }
 
 
@@ -83,8 +112,32 @@ void reverse(char* txt, char* result) {
  */
 int vowels(char* txt) {
 	int vowel = 0;
+	char *upper = txt;
 
 	/* REPLACE WITH YOUR CODE */
+	
+	int end = length(txt);
+	int i;
+	
+	
+	for (i = 0; i < end; ++i)
+	{
+		if(upper[i] == 'A' ||
+		upper[i] == 'E' || 
+		upper[i] == 'I' || 
+		upper[i] == 'O' || 
+		upper[i] == 'U' ||
+		upper[i] == 'a' ||
+		upper[i] == 'e' ||
+		upper[i] == 'i' ||
+		upper[i] == 'o' ||
+		upper[i] == 'u' )
+		
+		
+		{	
+			vowel++;
+		}
+	}
 
 	return vowel;
 }
@@ -107,8 +160,28 @@ int vowels(char* txt) {
 int quartile(char* name) {
 
 	/* REPLACE WITH YOUR CODE */
+
 	
-	return -1; // <==fix!
+	if (strcmp(name, "F") < 1)
+	{
+		return 1;
+	}
+	if (strcmp(name, "L") < 1)
+	{
+		return 2;
+	}	
+	if (strcmp(name, "R") < 1)
+	{
+		return 3;
+	}
+	if (strcmp(name, "R") > 0)
+	{
+		return 4;
+	}
+
+	
+	return -1;
+
 }
 
 
