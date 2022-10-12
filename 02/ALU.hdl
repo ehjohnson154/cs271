@@ -12,6 +12,8 @@
  * In addition, the ALU computes two 1-bit outputs:
  * if the ALU output == 0, zr is set to 1; otherwise zr is set to 0;
  * if the ALU output < 0, ng is set to 1; otherwise ng is set to 0.
+ 
+ Personal note reference: http://www.csc.villanova.edu/~mdamian/Past/csc2400fa13/assign/ALU.html
  */
 
 // Implementation: the ALU logic manipulates the x and y inputs
@@ -43,4 +45,10 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+   Add16()
+   Or16()
+   And16()
+   Overflow()
+   Overflow()
+   
 }
