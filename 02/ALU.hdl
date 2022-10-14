@@ -31,12 +31,12 @@
 CHIP ALU {
     IN  
         x[16], y[16],  // 16-bit inputs        
-        zx, // zero the x input?
-        nx, // negate the x input?
-        zy, // zero the y input?
-        ny, // negate the y input?
-        f,  // compute out = x + y (if 1) or x & y (if 0)
-        no; // negate the out output?
+        zx, // zero the x input? (And 16 w/false)
+        nx, // negate the x input? (not statement)
+        zy, // zero the y input? (and 16 w/false)
+        ny, // negate the y input? Not statement)
+        f,  // compute out = x + y (if 1) or x & y (if 0) ((Full adder, and))
+        no; // negate the out output? (not statement)
 
     OUT 
         out[16], // 16-bit output
@@ -45,10 +45,28 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
-   Add16()
-   Or16()
-   And16()
-   Overflow()
-   Overflow()
+   And16(a=x,b=false,out=xzero);
+   Mux16(a=x,b=xzero,sel=zx,out=zx1); // if (zx == 1) set x = 0     
+   Not16(in=zx1,out=xneg);
+   Mux16(a=zx1,b=xneg,sel=nx,out=nx1); // if (nx == 1) set x = !x       
+   
+   And16(a=y,b=false,out=yzero);
+   Mux16(a=y,b=yzero,sel=zy,out=zy1); // if (zy == 1) set y = 0 
+   Not16(in=zy1,out=yneg);
+   Mux16(a=zy1,b=yneg,sel=ny,out=ny1); // if (ny == 1) set y = !y 
+   
+   Add16(a=nx1,b=ny1,out=xyadd);
+   And16(a=nx1,b=ny1,out=xyand);
+   Mux16(a=xyand,b=xyadd,sel=f,out=xymux); // if (f == 1)  set out = x + y // if (f == 0)  set out = x & y
+   
+   Not16(in=xymux,out=xyneg);
+   Mux16(a=xymux,b=xyneg,sel=no,out=out,out[15]=negcheck, out[0..7]=right,out[8..15]=left, out=out1); // if (no == 1) set out = !out 
+   
+   And(a=negcheck,b=true,out=ng); // if (out < 0) set ng = 1
+   
+   Or8Way(in=left,out=or1);
+   Or8Way(in=right,out=or2);
+   Or(a=or1,b=or2,out=or3);
+   Not(in=or3,out=zr); // if (out == 0) set zr = 1   
    
 }
