@@ -27,7 +27,7 @@ char *strip(char *s){
 		{
 			break;
 		}
-		else if (isspace(*s2) != 0)//checking to confirm is not empty string
+		else if (!(isspace(*s2)))//checking to confirm is not empty string
 		{
 			s_new[i++] = *s2; //adding character in string position
 		}
@@ -58,7 +58,7 @@ void parse(FILE * file){
 	
 	if (*line != '\0') //if memory at line is not equal to null terminator/empty line:
 	{ 
-		printf(line);
+		printf("%s\n",line);
 	}
 	}
 	
