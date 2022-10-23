@@ -17,4 +17,9 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
+	Mux(//Zero out mux)
+	Mux(//loader mux);
+	Mux(Incrementer mux);
+	Register(in=in,load=load,out=reg1);
+	Mux4Way16(//choose which result)
 }

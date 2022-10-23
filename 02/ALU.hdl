@@ -57,7 +57,7 @@ CHIP ALU {
    
    Add16(a=nx1,b=ny1,out=xyadd);
    And16(a=nx1,b=ny1,out=xyand);
-   Mux16(a=xyand,b=xyadd,sel=f,out=xymux); // if (f == 1)  set out = x + y // if (f == 0)  set out = x & y
+   Mux16(a=xyand,b=xyadd,sel=fcd ,out=xymux); // if (f == 1)  set out = x + y // if (f == 0)  set out = x & y
    
    Not16(in=xymux,out=xyneg);
    Mux16(a=xymux,b=xyneg,sel=no,out=out,out[15]=negcheck, out[0..7]=right,out[8..15]=left, out=out1); // if (no == 1) set out = !out 
