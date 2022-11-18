@@ -23,7 +23,7 @@
 
 
 @2 //
-M=0 //set R0 to 0 STORE VALUE HERE
+M=0 //set R2 to 0 STORE VALUE HERE
 (WHILE) 
 @1 //
 D=M //Set D = R1
