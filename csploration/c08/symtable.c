@@ -64,7 +64,9 @@ Symbol *symtable_find(char *key) {
    //move in array until an empty 
    while(hashArray[hashIndex] != NULL) {//
 	
-      if(hashArray[hashIndex]->name == key)//
+      //if(hashArray[hashIndex]->name == key)//
+      
+      if(strcmp((hashArray[hashIndex]->name),key) == 0 )
          return hashArray[hashIndex]; 
 			
       //go to next cell//

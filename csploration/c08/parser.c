@@ -121,7 +121,7 @@ void parse(FILE * file){
 
 	while (fgets(line, sizeof(line), file)) 
 	{
-		//line_num += 1;
+		line_num += 1;
 
 		//Add an if statement that checks if the instr_num is greater than our constant MAX_INSTRUCTIONS. 
 		//If it is, call this function to exit.
@@ -140,12 +140,12 @@ void parse(FILE * file){
 		
 		else if (is_Ctype(line))
 		{
-			line_num += 1;
+
 			inst_type = 'C';
 		}		
 		else if (is_Atype(line))
 		{
-			line_num += 1;
+
 			inst_type = 'A';
 		}
 		else if (is_label(line))
@@ -153,9 +153,7 @@ void parse(FILE * file){
 
 
 			inst_type = 'L';
-			//printf("%s \n", line);
-			//char * label = malloc(sizeof(char) * strlen(line));
-			//printf("%s \n", line);
+
 			char new_label[MAX_LABEL_LENGTH];
 			extract_label(line, new_label);
 			//printf("%s \n", new_label);
@@ -166,12 +164,10 @@ void parse(FILE * file){
 			//label = extract_label(line,label);
 
 
-			if(isalpha(new_label[0])==0 && new_label[0] != '_'){
+			if(isalpha(new_label[0])==0){
 				exit_program(EXIT_INVALID_LABEL, line_num, new_label);
 			}
-			//Test Failed: b'ERROR: Line 3: _start : Invalid label name\n' != b'ERROR: Line 0: _start 
-			//: Invalid label name\n' 
-			//: incorrect handling of EXIT_INVALID_LABEL
+
 			if(symtable_find(new_label) != NULL){
 				exit_program(EXIT_SYMBOL_ALREADY_EXISTS, line_num, new_label);
 			}
