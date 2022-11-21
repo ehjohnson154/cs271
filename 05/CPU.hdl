@@ -1,3 +1,4 @@
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -40,4 +41,73 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+		
+	
+	//SECOND TEST CODE
+	
+	
+	//INSTRUCTIONS BREAKDOWN: [A/C]11[a/m] [computation 4 bits] [computation 2 bits][destination 2 bits] [destination 1 bit][Jump 3 bits]
+	
+	
+	//Overall breakdown://
+	//Before first mux: Decide if A or C instructions (sel pos 15)
+	//First mux: Decide if instructions, or ALU instructions (sel pos 5)
+	//A register: Stores value passed by first mux, oupputs addressMS
+	//Second mux: Decide if A or M instructions for ALU (sel pos 12)
+	//ALU: Calculates based on computation values from instructions
+	//Alu specifics: c1 = 11, c2 = 10, c3= 9, c4=8, c5=7, c6=6
+	//D register: stores value from ALU computation (sel pos 4)
+	//PC: Used for reset, writeM
+	
+
+	//Check first value of instruction. 0 is A-Instruction, 1 i C-instruction
+	//If C field, check for other instructions (Computation, Destination, Jump)
+	
+	
+	
+	//Decides for A register if its taking the upcode from ALU or computer instructions//
+	
+	Or(a=instruction[15], b=false, out=Cinstruct); //Checks if first position is 1
+	Not(in=instruction[15], out=Ainstruct); //If 0, then A instruct, and A instruct ==1
+
+	
+	//Main logic flow of CPU://
+	
+	And(a=Cinstruct, b=instruction[5], out=CWriteA);  //Checks register destination
+    Mux16(a=instruction, b=alu, sel=CWriteA, out=aRegIn); // selects ALU or instruction 
+	
+	Or(a=Ainstruct,b=CWriteA,out=loadAReg); //Confirms load if need to write to A
+	ARegister(in=aRegIn,load=loadAReg,out=aReg,out[0..14]=addressM); 
+	
+	Mux16(a=aReg,b=inM, sel=instruction[12],out=aluIn); //Select A or M
+	
+	ALU(x=dReg, y=aluIn, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], 
+	f=instruction[7], no=instruction[6], out=alu,out=outM, zr=zrOut, ng=ngOut); // Alu junk
+	
+	And(a=Cinstruct, b=instruction[4], out=loadDReg);
+	DRegister(in=alu,load=loadDReg,out=dReg); //Load d register if needed
+	
+	
+	//PC/Reset//
+	
+	//Narrow down the jump inputs
+	//First check if positive
+    Not(in=ngOut, out=isNotNeg);
+    Not(in=zrOut, out=isNotZero);
+    And(a=isNotNeg, b=isNotZero, out=pos); // positive if alu is NOT negative or zero
+    
+    And(a=Cinstruct, b=instruction[3], out=writeM);  // write M output?
+    
+	//Check to see if there is any kind of jump
+    And(a=pos, b=instruction[0], out=JGT);
+    And(a=zrOut, b=instruction[1], out=JEQ);
+    And(a=ngOut, b=instruction[2], out=JLT);
+    
+	//If any jumps, jump to A
+    Or(a=JEQ, b=JLT, out=JLE);
+    Or(a=JLE, b=JGT, out=jumpToA);    
+    And(a=Cinstruct, b=jumpToA, out=loadPC);   //confirm its c instruct
+    Not(in=loadPC, out=PCinc);
+    PC(in=aReg, inc=PCinc, load=loadPC, reset=reset, out[0..14]=pc);
+	
 }
