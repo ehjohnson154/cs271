@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//EXERCISE 4
-//Add an enumeration named exitcode. Let's make one item (to start
+
 
 /*
  * Error code 1 represents that given file does not exist.
@@ -19,6 +18,7 @@ typedef enum exitcode
     EXIT_INVALID_ARGUMENTS,
     EXIT_INVALID_LABEL,
     EXIT_SYMBOL_ALREADY_EXISTS,
+    EXIT_INVALID_A_INSTR,
     }exitcode;
 
 

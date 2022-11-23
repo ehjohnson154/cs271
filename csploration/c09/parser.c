@@ -8,6 +8,67 @@
 #include "parser.h"
 #include "symtable.h"
 #include "error.h"
+// #include "hack.h"
+
+
+//EXERCISE 4:
+void add_predefined_symbols(){
+	//for loop
+	//iterate over NUM_PREDEFINED_SYMBOLS
+
+	for(int i=0; i < NUM_PREDEFINED_SYMBOLS; i++)
+	{
+		
+		//load each value of predefined_symbols array into instance of struct predefined_symbol
+		predefined_symbol pred_sym = predefined_symbols[i];
+
+		//Because we save string/int, set struct instance to "i-th" position of predefined_symbols array,
+		//corresponding values become name and address
+
+		//load predefined_symbol into symbol table using symtable_insert
+		symtable_insert(pred_sym.name,pred_sym.address);
+
+	}
+}
+
+//EXERCISE 5:
+
+bool parse_A_instruction(const char *line, a_instruction *instr){
+	//temp string s, malloc based on length of line, skip usual +1
+	char* s = (char*) malloc((strlen(line)));
+	
+	//Copy line+1 to s
+	strcpy(s, (line+1));
+	
+	//Create a string s_end, set to null
+	char* s_end = NULL;
+	long result = strtol(s,&s_end, 10); //this means string to long in base 10
+	//Check if s is equal to s_end, 
+	if (s == s_end){
+		//means we have a string
+		//malloc operand.label, use length as size
+		instr -> a_type.label = malloc(strlen(line));
+
+		//copy s to operand.label of instr
+		strcpy((instr-> a_type.label),s);
+		//set is_address of instr to false, since label
+		instr->is_addr = false;
+	}
+	
+	else if (*s_end != 0){
+		//means we have a mix of string and int
+		return false;
+	}
+	else{
+		//means we have a number
+		//set operand.address of instr to be result
+		instr -> a_type.address = result;
+		//set is_addr of instr to be true, since its a address
+		instr->is_addr = true;
+	}
+	return true;
+
+}
 
 
 char *extract_label(const char *line, char* label){
@@ -23,7 +84,6 @@ char *extract_label(const char *line, char* label){
 
 
 /*Function is_Atype
-STUFF
 An Atype (address) instruction will always begin with the @ symbol. 
 So if the first character of line is the "at" symbol, then we return true. 
 If not, we return false. 
@@ -106,19 +166,22 @@ char *strip(char *s){
  * returns: nothing
  */
 void parse(FILE * file){
+	//exercise 6:
+	//will load up instr with A or C instruction
+	instruction instr;
+
 	//sets up variables
 	char line[MAX_LINE_LENGTH] = {0};
 	//char label[MAX_LABEL_LENGTH] = {0};
 	
 	unsigned int line_num = 0;
 	char inst_type;
-
-
-	//exercise 7:
+	
 	//unsigned int line_num;
 	unsigned int instr_num = 0;
 
-
+	add_predefined_symbols();
+	//symtable_display_table(); //verify
 	while (fgets(line, sizeof(line), file)) 
 	{
 		line_num += 1;
@@ -145,6 +208,11 @@ void parse(FILE * file){
 		}		
 		else if (is_Atype(line))
 		{
+			//EXERCISE 6:
+			if (!parse_A_instruction(line, &instr.i_type.a)){
+    			exit_program(EXIT_INVALID_A_INSTR, line_num, line);
+ 			}
+ 			instr.field = Atype;
 
 			inst_type = 'A';
 		}
@@ -156,12 +224,6 @@ void parse(FILE * file){
 
 			char new_label[MAX_LABEL_LENGTH];
 			extract_label(line, new_label);
-			//printf("%s \n", new_label);
-			//printf("%c \n", new_label[0]);
-
-			// strcpy(line, extract_label(line, label));
-			//printf("%s \n", line);
-			//label = extract_label(line,label);
 
 
 			if(isalpha(new_label[0])==0){
@@ -177,10 +239,8 @@ void parse(FILE * file){
 
 		}
 
-		//Next, change your printf to print a single character %c and two blank spaces before your %s line.
 		//printf("%c  %s\n",inst_type,line);
-		//PART 2
-		printf("%u: %c  %s\n", instr_num, inst_type, line);
+		//printf("%u: %c  %s\n", instr_num, inst_type, line);
 		instr_num +=1;
 		
 

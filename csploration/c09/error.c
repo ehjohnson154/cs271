@@ -1,11 +1,5 @@
 #include "error.h"
 
-
-//EXERCISE 5 & Exercise 6
-
-
-//EXERCISE 6
-
 //add the item to array error_messages. The string will be "Cannot open file %s". 
 const char *error_messages[] =
 {
@@ -15,6 +9,7 @@ const char *error_messages[] =
     [EXIT_INVALID_ARGUMENTS] = "Line %u: %s : Invalid label name",
     [EXIT_INVALID_LABEL] = "Line %u: %s : Invalid label name",
     [EXIT_SYMBOL_ALREADY_EXISTS] = "Line %u: %s : Symbol is already defined",
+    [EXIT_INVALID_A_INSTR] = "Line %u: %s : Invalid A-instruction operand",
 };
 
 

@@ -3,7 +3,7 @@
 
 
 Symbol* hashArray[SYMBOL_TABLE_SIZE]; 
-//EXERCISE 3
+
 //We need a hash function that maps from string to integer. 
 //Implement the djb2 Links to an external site. hash function from the linked source. 
 //As one addition to the provided hash function, 
@@ -25,7 +25,7 @@ int hash(char *str)
 
 
 
-//EXERCISE 4
+
 //Write the symtable_insert function. Adapt from the provided tutorial. 
 //Just remember, our key is a string and our data is a ROM address (a line number of the program).
 
@@ -54,7 +54,7 @@ void symtable_insert(char* key, hack_addr addr){
 
 
 
-//EXERCISE 5
+
 //Write the symtable_find function. 
 
 Symbol *symtable_find(char *key) {
@@ -80,7 +80,7 @@ Symbol *symtable_find(char *key) {
 }
 
 
-//EXERCISE 6
+
 //Write the symtable_display_table function.
 
 void symtable_display_table() {
@@ -98,7 +98,7 @@ void symtable_display_table() {
 }
 
 
-//EXERCISE 7
+
 //Add the symtable_display_table function. 
 void symtable_print_labels() {
    int i = 0;    

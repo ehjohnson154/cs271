@@ -19,14 +19,14 @@ int main(int argc, const char *argv[])
     //Close your file pointer (like last week).
 
 	
-	//exercise 2
+
 	//// if incorrect number of arguments
 if (argc != 2) {
     // incorrect number of arguments
     exit_program(EXIT_INCORRECT_ARGUMENTS, argv[0]);        
 }  
 	
-	//exercise 3
+
 	FILE *fin = fopen(argv[1], "r");
 
 	//Add an if statement to make sure the file pointer is not NULL. 
@@ -36,7 +36,7 @@ if(fin == NULL){
 }
 
 	parse(fin);
-	//symtable_print_labels();
+	symtable_print_labels();
 	fclose(fin);
 }
 
