@@ -20,9 +20,13 @@ opcode instruction_to_opcode(c_instruction instr){
 	// ... move to the left 13 places for cpu instructions
 	//This adds the 111 bits and bitshifts it 13 places, so the three most significant bits are 111.
 	//Continue this pattern and add the a, comp, dest, and jump bits, each bitshifted to their proper location.
-
 	opcode op = 0;
-	op |= (instr.comp << x);
+	op |= (7 << 13);
+	op |= (instr.a << 12);
+	op |= (instr.comp << 6);
+	op |= (instr.dest << 3);
+	op |= (instr.jump << 0);
+	return op;
 	// Return the op variable.	
 
 }
@@ -40,7 +44,6 @@ void assemble(const char * file_name, instruction* instructions, int num_instruc
 	for(int i=0; i < instructions; i++) // iterate over the number of instructions
 	{
 		
-		
 		if(instructions->i_type.a.is_addr == false)// if A-type label
 		{
 			if (symtable_find(instructions->i_type.a.a_type.label == NULL)){
@@ -48,8 +51,6 @@ void assemble(const char * file_name, instruction* instructions, int num_instruc
 				address++;
 			}
 			
-
-
 			else{
 				instructions -> i_type.a.a_type.address = symtable_find(instructions->i_type.a.a_type.label); //IS THIS RIGHT?
 			}
@@ -57,7 +58,6 @@ void assemble(const char * file_name, instruction* instructions, int num_instruc
 			free(instructions->i_type.a.a_type.label);    // free the memory associated with the label in the instruction
 			
 		}
-    
 	
 		if(instructions->i_type.a.is_addr == true) //if A-type address
 		{
@@ -69,15 +69,10 @@ void assemble(const char * file_name, instruction* instructions, int num_instruc
     //         lookup the opcode instruction_to_opcode (explained below)
 			instruction_to_opcode(instructions->i_type.c);
 		}
-
     //     print the 16 character %c opcode using macro OPCODE_TO_BINARY (explained below)
-		printf(%c)
-
-	}
-	
-    
+		printf("%c", OPCODE_TO_BINARY); //FINISH THIS
+	} 
 	fclose(fp); // close the file pointer
-
 }
 
 
