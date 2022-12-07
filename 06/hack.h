@@ -431,5 +431,11 @@ static inline comp_id str_to_compid(const char *s, int *a){
 //WRITE OPCODE TO BINARY
 #define OPCODE_TO_BINARY(opcode) \
   (opcode & 0x8000 ? '1' : '0'), \
+  (opcode & 0x4000 ? '1' : '0'), \
+  (opcode & 0x2000 ? '1' : '0'), \
+  (opcode & 0x1000 ? '1' : '0'), \
+  (opcode & 0x0800 ? '1' : '0'), \
   ...
-  //define this for other 15 bits
+  //define this for other 15 bitsg
+
+  

@@ -79,7 +79,7 @@ typedef struct instruction{
 void add_predefined_symbols();
 
 
-bool parse_A_instruction(const char *line, a_instruction *instr);
+bool parse_A_instructi	on(const char *line, a_instruction *instr);
 
 /** function prototypes **/
 char *strip(char *s);
