@@ -104,26 +104,6 @@ typedef enum dest_id{
 //EXERCISE 3//
 
 typedef enum comp_id{
-    // COMP_INVALID = -1,
-    // COMP_NULL = 0,
-    // COMP_0 = 42,
-    // COMP_1 = 63,
-    // COMP_2 = 58, //-1
-    // COMP_3 = 12, //D
-    // COMP_4 = 48, //A
-    // COMP_5 = 13, //!D
-    // COMP_6 = 49, //!A
-    // COMP_7 = 15, //-D
-    // COMP_8 = 51, //-A
-    // COMP_9 = 31, //D+1
-    // COMP_10 = 55, //A+1
-    // COMP_11 = 14, //D-1
-    // COMP_12 = 50, //A-1
-    // COMP_13 = 2, //D+A
-    // COMP_14 = 19, //D-A
-    // COMP_15 = 7, //A-D
-    // COMP_16 = 0, // D&A
-    // COMP_17 = 21, //D|A
 
     COMP_INVALID = -1,
     COMP_0 = 42,
@@ -222,124 +202,8 @@ static inline dest_id str_to_destid(const char *s){
 }
 
 static inline comp_id str_to_compid(const char *s, int *a){
-    //similar function to 4, except computations. 
-    //also set value of a, passed by pointer. FINISH
-    comp_id id = COMP_INVALID;
-//     if (strcmp(s,"0") == 0){
-//     id = COMP_0;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"1") == 0){
-//     id = COMP_1;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"-1") == 0){
-//     id = COMP_2;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"D") == 0){
-//     id = COMP_3;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"A") == 0){
-//     id = COMP_4;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"M") == 0){
-//     id = COMP_4;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"!D") == 0){
-//     id = COMP_5;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"!A") == 0){
-//     id = COMP_6;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"!M")== 0){
-//     id = COMP_6;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"-D") == 0){
-//     id = COMP_7;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"-A") == 0){
-//     id = COMP_8;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"-M") == 0){
-//     id = COMP_8;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"D+1") == 0){
-//     id = COMP_9;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"A+1") == 0){
-//     id = COMP_10;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"M+1") == 0){
-//     id = COMP_10;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"D-1") == 0){
-//     id = COMP_11;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"A-1") == 0){
-//     id = COMP_12;
-//     a = 0;
-//     }
-//     else if (strcmp(s,"M-1") == 0){
-//     id = COMP_12;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"D+A") == 0){
-//     id = COMP_13;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"D+M") == 0){
-//     id = COMP_13;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"D-A") == 0){
-//     id = COMP_14;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"D-M") == 0){
-//     id = COMP_14;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"A-D") == 0){
-//     id = COMP_15;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"M-D") == 0){
-//     id = COMP_15;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"D&A") == 0){
-//     id = COMP_16;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"D&M") == 0){
-//     id = COMP_16;
-//     *a = 1;
-//     }
-//     else if (strcmp(s,"D|A") == 0){
-//     id = COMP_17;
-//     *a = 0;
-//     }
-//     else if (strcmp(s,"D|M") == 0){
-//     id = COMP_17;
-//     *a = 1;
-//     }
-//     return id;
 
-// }
+    comp_id id = COMP_INVALID;
 
 	if (!strcmp(s, "0")) {
 		id = COMP_0;
@@ -445,7 +309,8 @@ static inline comp_id str_to_compid(const char *s, int *a){
   (opcode & 0x0008 ? '1' : '0'), \
   (opcode & 0x0004 ? '1' : '0'), \
   (opcode & 0x0002 ? '1' : '0'), \
-  (opcode & 0x0001 ? '1' : '0'), \
-  //define this for other 15 bitsg
+  (opcode & 0x0001 ? '1' : '0') 
+  //'\0'
+
 
   

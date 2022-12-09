@@ -35,7 +35,6 @@ typedef int16_t opcode;
 typedef enum instr_type {
     Inval = -1, 
     Atype,
-    Btype,
 	Ctype,
     }instr_type;
 

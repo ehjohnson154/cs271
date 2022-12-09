@@ -25,52 +25,71 @@ opcode instruction_to_opcode(c_instruction instr){
 	op |= (instr.a << 12);
 	op |= (instr.comp << 6);
 	op |= (instr.dest << 3);
-	op |= (instr.jump << 0);
+	op |= (instr.jump);
 	return op;
 	// Return the op variable.	
-
 }
 
 void assemble(const char * file_name, instruction* instructions, int num_instructions){
 	
-    // open a file for writing named after the given file_name with added file suffix ".hack"
-    //     e.g.  "Max.asm" becomes "Max.asm.hack"
-	FILE * fp;
-	fp = fopen((file_name + '.hack'), 'w');
+	//printf("assemble running!");
+	// printf("%d", num_instructions);
+	// FILE * fp;
+	// char * renamed_file = "";
+	//strcpy(renamed_file,file_name);
+	// strcat(renamed_file,".hack");
+	// fp = fopen(renamed_file, "w");
+
+	//FILE *fp = fopen(strcat(strdup(file_name), ".hack"), "w");
+
+	char * output_name = malloc(strlen(file_name) + 6);
+	strcpy(output_name,file_name);
+	strcat(output_name,".hack");
+	FILE * fp = fopen(output_name, "w");
+
 	int address=16;
-
-    
-    
-	for(int i=0; i < instructions; i++) // iterate over the number of instructions
+	//opcode opcode;
+	for(int i=0; i < num_instructions; i++) // iterate over the number of instructions
 	{
+		//printf("enters loop!");
 		
-		if(instructions->i_type.a.is_addr == false)// if A-type label
+		instruction instr = instructions[i];
+		opcode op = 0;
+		
+		if(instr.field == Atype)
 		{
-			if (symtable_find(instructions->i_type.a.a_type.label == NULL)){
-				symtable_insert(instructions->i_type.a.a_type.label, address);
-				address++;
-			}
+			printf("enters A-type!");
+			fflush(stdout);
 			
-			else{
-				instructions -> i_type.a.a_type.address = symtable_find(instructions->i_type.a.a_type.label); //IS THIS RIGHT?
+			if((instr.i_type.a.is_addr) == false)// if A-type label
+			{
+				if (symtable_find(instr.i_type.a.a_type.label) == NULL){ //ERROR 1 passing argument 1 of 'symtable_find' makes pointer from integer without a cast 
+					symtable_insert(instr.i_type.a.a_type.label, address);
+					address++;
+				}
+				
+				Symbol * labelA = symtable_find(instr.i_type.a.a_type.label); //ERROR 2?? expected 'char *' but argument is of type 'int'
+				op = labelA->addr; 
+				free(instr.i_type.a.a_type.label);    // free the memory associated with the label in the instruction
 			}
-
-			free(instructions->i_type.a.a_type.label);    // free the memory associated with the label in the instruction
-			
-		}
 	
-		if(instructions->i_type.a.is_addr == true) //if A-type address
-		{
-			instructions -> i_type.a.a_type.address = symtable_find(instructions->i_type.a.a_type.address); //IS THIS RIGHT?
+			if(instr.i_type.a.is_addr == true) //if A-type address
+			{
+			//store result of symtable find in variable
+				op = instr.i_type.a.a_type.address;
+			}
 		}
 
-		if(instructions->field = Ctype) //if C-type instruction
+		if(instr.field == Ctype) //if C-type instruction 
 		{
+			printf("enters c type!");
+			fflush(stdout);
     //         lookup the opcode instruction_to_opcode (explained below)
-			instruction_to_opcode(instructions->i_type.c);
+			op = instruction_to_opcode(instr.i_type.c);
 		}
     //     print the 16 character %c opcode using macro OPCODE_TO_BINARY (explained below)
-		printf("%c", OPCODE_TO_BINARY); //FINISH THIS
+		fprintf(fp, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n", OPCODE_TO_BINARY(op));
+		fflush(fp);
 	} 
 	fclose(fp); // close the file pointer
 }
@@ -282,11 +301,7 @@ int parse(FILE * file, instruction *instructions){
 	//char inst_type;
 	unsigned int instr_num = 0;
 
-
-	//EXERCISE 8//
 	char tmp_line[MAX_LINE_LENGTH];
-
-
 
 	add_predefined_symbols();
 	//symtable_display_table(); //verify
