@@ -52,44 +52,43 @@ void assemble(const char * file_name, instruction* instructions, int num_instruc
 	for(int i=0; i < num_instructions; i++) // iterate over the number of instructions
 	{
 		//printf("enters loop!");
-		
-		instruction instr = instructions[i];
+		instruction * instr = instructions+i;
 		opcode op = 0;
+		//printf("C: d=%d, c=%d, j=%d\n", instr->i_type.c.dest, instr->i_type.c.comp, instr->i_type.c.jump);
 		
-		if(instr.field == Atype)
+		if(instr->field == Atype)
 		{
-			printf("enters A-type!");
-			fflush(stdout);
+			// printf("enters A-type!");
+			// fflush(stdout);
 			
-			if((instr.i_type.a.is_addr) == false)// if A-type label
+			if((instr->i_type.a.is_addr) == false)// if A-type label
 			{
-				if (symtable_find(instr.i_type.a.a_type.label) == NULL){ //ERROR 1 passing argument 1 of 'symtable_find' makes pointer from integer without a cast 
-					symtable_insert(instr.i_type.a.a_type.label, address);
+				if (symtable_find(instr->i_type.a.a_type.label) == NULL){ //ERROR 1 passing argument 1 of 'symtable_find' makes pointer from integer without a cast 
+					symtable_insert(instr->i_type.a.a_type.label, address);
 					address++;
 				}
-				
-				Symbol * labelA = symtable_find(instr.i_type.a.a_type.label); //ERROR 2?? expected 'char *' but argument is of type 'int'
+				Symbol * labelA = symtable_find(instr->i_type.a.a_type.label); //ERROR 2?? expected 'char *' but argument is of type 'int'
 				op = labelA->addr; 
-				free(instr.i_type.a.a_type.label);    // free the memory associated with the label in the instruction
+				free(instr->i_type.a.a_type.label);    // free the memory associated with the label in the instruction
 			}
 	
-			if(instr.i_type.a.is_addr == true) //if A-type address
+			if(instr->i_type.a.is_addr == true) //if A-type address
 			{
 			//store result of symtable find in variable
-				op = instr.i_type.a.a_type.address;
+				op = instr->i_type.a.a_type.address;
 			}
 		}
 
-		if(instr.field == Ctype) //if C-type instruction 
+		if(instr->field == Ctype) //if C-type instruction 
 		{
-			printf("enters c type!");
-			fflush(stdout);
+			// printf("enters c type!");
+			// fflush(stdout);
     //         lookup the opcode instruction_to_opcode (explained below)
-			op = instruction_to_opcode(instr.i_type.c);
+			op = instruction_to_opcode(instr->i_type.c);
 		}
     //     print the 16 character %c opcode using macro OPCODE_TO_BINARY (explained below)
 		fprintf(fp, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n", OPCODE_TO_BINARY(op));
-		fflush(fp);
+		// fflush(fp);
 	} 
 	fclose(fp); // close the file pointer
 }
@@ -102,34 +101,23 @@ void parse_C_instruction(char *line, c_instruction *instr){
 	int a = 0;
 	
 	char* dest;
-	//printf("program entered parse_c!");
-
 	//split into jump, dest, comp
 	temp = strtok(line, ";");
 	jump = strtok(NULL, "");
 	dest = strtok(temp, "=");
 	comp = strtok(NULL, "");
-
-	//printf("program split!");
 	
 	//check if comp is NULL
-
 	if (comp == NULL){
 		comp = dest;
 		dest = NULL;
 	}
-	//printf("program checked null!");
-	// printf(comp);
-	// printf(a);
-	instr -> comp = str_to_compid(comp, &a);
-	//printf(comp);
-	//printf(a);
-	//printf("Program assigned comps!");
-	instr -> dest = str_to_destid(dest);
-	//printf("program assigned dests!");
-	instr -> jump = str_to_jumpid(jump);
 
-	//printf("program assigned values!");
+	
+	instr -> comp = str_to_compid(comp, &a);
+	instr -> dest = str_to_destid(dest);
+	instr -> jump = str_to_jumpid(jump);
+	instr ->a = a;
 
 	//split apart string by ; = 
 	//catch if null after lass step
@@ -293,20 +281,19 @@ char *strip(char *s){
 //void parse(FILE * file){
 int parse(FILE * file, instruction *instructions){
 	
-	instruction instr; //will load up instr with A or C instruction
+	 //will load up instr with A or C instruction
 	char line[MAX_LINE_LENGTH] = {0}; //sets up variables
 	//char label[MAX_LABEL_LENGTH] = {0};
-	
 	unsigned int line_num = 0;
 	//char inst_type;
 	unsigned int instr_num = 0;
-
 	char tmp_line[MAX_LINE_LENGTH];
 
 	add_predefined_symbols();
 	//symtable_display_table(); //verify
 	while (fgets(line, sizeof(line), file)) 
 	{
+		instruction instr;
 		line_num += 1;
 
 		//Add an if statement that checks if the instr_num is greater than our constant MAX_INSTRUCTIONS. 
@@ -322,31 +309,26 @@ int parse(FILE * file, instruction *instructions){
 		{ 
 			continue;
 		}
-
 		
 		else if (is_Ctype(line))
 		{
+			strcpy(tmp_line, line);
+			parse_C_instruction(tmp_line, (&instr.i_type.c)); //??
 
-		strcpy(tmp_line, line);
+			//printf("program parsed c instructions!");
 
-		parse_C_instruction(tmp_line, (&instr.i_type.c)); //??
-
-		//printf("program parsed c instructions!");
-
-		if (instr.i_type.c.dest == DEST_INVALID){
-			exit_program(EXIT_INVALID_C_DEST, line_num, line);
-		}
-		if (instr.i_type.c.comp == COMP_INVALID){
-			exit_program(EXIT_INVALID_C_COMP, line_num, line);
-		}
-		if (instr.i_type.c.jump == JMP_INVALID){
-			exit_program(EXIT_INVALID_C_JUMP, line_num, line);
-		}
-		instructions->field = Ctype;
-
-		printf("C: d=%d, c=%d, j=%d\n", instr.i_type.c.dest, instr.i_type.c.comp, instr.i_type.c.jump);
-		//printf("program did not exit!");
-
+			if (instr.i_type.c.dest == DEST_INVALID){
+				exit_program(EXIT_INVALID_C_DEST, line_num, line);
+			}
+			if (instr.i_type.c.comp == COMP_INVALID){
+				exit_program(EXIT_INVALID_C_COMP, line_num, line);
+			}
+			if (instr.i_type.c.jump == JMP_INVALID){
+				exit_program(EXIT_INVALID_C_JUMP, line_num, line);
+			}
+			instr.field = Ctype;
+			printf("C: d=%d, c=%d, j=%d\n", instr.i_type.c.dest, instr.i_type.c.comp, instr.i_type.c.jump);
+			//printf("program did not exit!");
 
 		}		
 		else if (is_Atype(line))
@@ -356,7 +338,6 @@ int parse(FILE * file, instruction *instructions){
     			exit_program(EXIT_INVALID_A_INSTR, line_num, line);
  			}
  			instr.field = Atype;
-
 			//inst_type = 'A';
 			if (instr.i_type.a.is_addr == true){
 				printf("A: %d\n", instr.i_type.a.a_type.address);
@@ -368,13 +349,9 @@ int parse(FILE * file, instruction *instructions){
 		}
 		else if (is_label(line))
 		{
-
-
 			//inst_type = 'L';
-
 			char new_label[MAX_LABEL_LENGTH];
 			extract_label(line, new_label);
-
 
 			if(isalpha(new_label[0])==0){
 				exit_program(EXIT_INVALID_LABEL, line_num, new_label);
@@ -388,15 +365,11 @@ int parse(FILE * file, instruction *instructions){
 			continue;
 
 		}
-
 		//printf("%c  %s\n",inst_type,line);
 		//printf("%u: %c  %s\n", instr_num, inst_type, line);
 		instructions[instr_num++] = instr;
-		
-
 	
 	}
-	//EXERCISE 9
 	return instr_num;
 	
 }

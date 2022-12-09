@@ -20,8 +20,6 @@ int main(int argc, const char *argv[])
 if (argc != 2) {
     exit_program(EXIT_INCORRECT_ARGUMENTS, argv[0]);        
 }  
-	
-
 	FILE *fin = fopen(argv[1], "r");
 
 	//Add an if statement to make sure the file pointer is not NULL. 
@@ -34,6 +32,11 @@ if(fin == NULL){
 	//symtable_print_labels();
 	fclose(fin);
     //CALL ASSEMBLE FUNCTION
+	// for(int i=0; i < num_instructions; i++){
+	// 	instruction * instr = instructions+i;
+	// 	printf("%d\n", instr->field);
+	// }
+
     assemble(argv[1], instructions, num_instructions);
     free(instructions);
 }
